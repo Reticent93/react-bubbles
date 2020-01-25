@@ -7,7 +7,7 @@ const initialColor = {
 };
 
 const ColorList = ({ colors, updateColors }) => {
-	console.log(colors);
+	console.log('colors', colors);
 	const [ editing, setEditing ] = useState(false);
 	const [ colorToEdit, setColorToEdit ] = useState(initialColor);
 
@@ -33,11 +33,20 @@ const ColorList = ({ colors, updateColors }) => {
 
 	const deleteColor = (e, color) => {
 		// make a delete request to delete this color
-		e.preventDefault();
+
 		api()
-			.delete(`/api/color/${color.id}`)
+			.delete(`/api/colors/${colors.id}`)
 			.then((res) => {
 				console.log('Color was deleted');
+				api()
+					.get('/api/colors')
+					.then((res) => {
+						updateColors(res.data);
+						setEditing(false);
+					})
+					.catch((err) => {
+						console.log(err);
+					});
 			})
 			.catch((err) => {
 				console.log(err);
